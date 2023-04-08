@@ -1,0 +1,42 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Myra"
+    },
+    {
+      "name": "Marion Hodkiewicz",
+      "id": 2
+    },
+    {
+      "name": "Rodney Waelchi",
+      "id": 3
+    },
+    {
+      "name": "Kelly Wunsch",
+      "id": 4
+    },
+    {
+      "name": "Dave Cruickshank",
+      "id": 5
+    },
+    {
+      "name": "Toby Lynch",
+      "id": 6
+    },
+    {
+      "name": "Jeffrey Abshire",
+      "id": 7
+    },
+    {
+      "name": "Catherine Hegmann",
+      "id": 8
+    },
+    {
+      "name": "Florence Smitham",
+      "id": 9
+    }
+  ],
+  "albums": [],
+  "photos": []
+}
