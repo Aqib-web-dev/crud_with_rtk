@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { fetchUsers, addUser } from '../store';
+import useThunk from '../hooks/useThunk';
+import { fetchUsers, addUser, removeUser } from '../store';
 import UsersShimmer from './UsersShimmer';
-
 
 const User = styled.div`
   display: flex;
@@ -34,10 +34,6 @@ const UserName = styled.div`
   margin-right: 10px;
 `;
 
-const UserEmail = styled.div`
-  margin-left: 10px;
-`;
-
 const Button = styled.button`
   background-color: #4CAF50; /* Green */
   border: none;
@@ -59,39 +55,47 @@ const Wrapper = styled.div`
 `;
 
 const UsersList = () => {
-  const dispatch = useDispatch();
-  const {data, isLoading, error} = useSelector((state) => state.users);
+  const [doFetchUsers, isLoadingUser, isErrorLoadingUser] = useThunk(fetchUsers);
+  const [doCreateUser, isCreatingUsers, isCreatingUserError] = useThunk(addUser);
+  const [doRemoveUser] = useThunk(removeUser);
+  const {data} = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    doFetchUsers();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
-  if (isLoading) {
+  if (isLoadingUser) {
     return <UsersShimmer times={6} />
   }
 
-  if (error) {
+  if (isErrorLoadingUser) {
     return <p>Error fetching data ...</p>
   }
 
   const handleAddUser = () => {
-    dispatch(addUser());
+    doCreateUser();
+  }
+
+  const handleRemoveUser = (user) => {
+    doRemoveUser(user);
   }
 
   return (
     <>
     <Wrapper>
       <h2>Users List</h2>
-      <Button onClick={handleAddUser}>+Add User</Button>
+      {
+        isCreatingUsers ? 'Creating user' :
+        <Button onClick={handleAddUser}>+ Add User</Button>
+      }
+      {isCreatingUserError && "error in user creation"}
     </Wrapper>
-
     {
-      data.map(({name, email, id}) => (
-        <User key={id}>
+      data.map((user) => (
+        <User key={user.id} onClick={() => handleRemoveUser(user)}>
           <UserInfo>
-            <UserName>{name}</UserName>
-            <UserEmail>{email}</UserEmail>
+            <UserName>{user.name}</UserName>
           </UserInfo>
         </User>
       ))
